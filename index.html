@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSPHERE</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom right, orange, red);
+        }
+        #sidebar {
+            width: 200px;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background-color: #333;
+            color: white;
+            padding-top: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.5);
+        }
+        #sidebar button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            background: none;
+            border: none;
+            color: white;
+            text-align: left;
+            cursor: pointer;
+        }
+        #main {
+            margin-left: 200px;
+            padding: 20px;
+        }
+        dialog {
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            width: 600px;
+        }
+        dialog::backdrop {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .dialog-header {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .dialog-header button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2em;
+            cursor: pointer;
+        }
+        .dialog-body {
+            padding: 20px;
+            background-color: white;
+        }
+        #webViewFrame, #popupFrame {
+            width: 100%;
+            height: 300px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="sidebar">
+    <button onclick="openApp('jsConsole')">JavaScript Console</button>
+    <button onclick="openApp('webView')">Web Viewer</button>
+</div>
+
+<div id="main">
+    <h1>Welcome to OSPHERE</h1>
+    <p>Select an app from the sidebar to start.</p>
+</div>
+
+<dialog id="jsConsole">
+    <div class="dialog-header">
+        <span>JavaScript Console</span>
+        <button onclick="closeDialog('jsConsole')">&times;</button>
+    </div>
+    <div class="dialog-body">
+        <textarea id="consoleInput" style="width: 100%; height: 300px;"></textarea>
+        <button onclick="runJs()">Run</button>
+        <pre id="consoleOutput" style="background-color: #f0f0f0; padding: 10px;"></pre>
+    </div>
+</dialog>
+
+<dialog id="webView">
+    <div class="dialog-header">
+        <span>Web Viewer</span>
+        <button onclick="closeDialog('webView')">&times;</button>
+    </div>
+    <div class="dialog-body">
+        <input type="text" id="urlInput" placeholder="Enter URL" style="width: 80%;">
+        <button onclick="loadUrl()">Load</button>
+    </div>
+    <div class="dialog-body">
+        <iframe id="webViewFrame" src="https://www.google.com/webhp?igu=1"></iframe>
+    </div>
+</dialog>
+
+<dialog id="popupViewer">
+    <div class="dialog-header">
+        <span>Popup Content</span>
+        <button onclick="closeDialog('popupViewer')">&times;</button>
+    </div>
+    <div class="dialog-body">
+        <iframe id="popupFrame"></iframe>
+    </div>
+</dialog>
+
+<script>
+    function openApp(appId) {
+        document.getElementById(appId).showModal();
+    }
+
+    function closeDialog(dialogId) {
+        document.getElementById(dialogId).close();
+    }
+
+    function runJs() {
+        const input = document.getElementById('consoleInput').value;
+        let output;
+        try {
+            output = eval(input);
+        } catch (e) {
+            output = e.toString();
+        }
+        document.getElementById('consoleOutput').textContent = output;
+    }
+
+    function loadUrl() {
+        const input = document.getElementById('urlInput').value;
+        const fullUrl = input + "webhp?igu=1";
+        document.getElementById('webViewFrame').src = fullUrl;
+    }
+
+    window.open = function(url) {
+        const fullUrl = url + "webhp?igu=1";
+        document.getElementById('popupFrame').src = fullUrl;
+        openApp('popupViewer');
+    }
+</script>
+
+</body>
+</html>
