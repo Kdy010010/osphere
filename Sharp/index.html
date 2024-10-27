@@ -238,7 +238,6 @@
 </dialog>
 
 <script>
-    // Open IndexedDB
     const request = indexedDB.open('OSPHERE_DB', 1);
 
     request.onupgradeneeded = function(event) {
@@ -273,14 +272,7 @@
 
     function loadUrl() {
         const input = document.getElementById('urlInput').value;
-        const fullUrl = input + "webhp?igu=1";
-        document.getElementById('webViewFrame').src = fullUrl;
-    }
-
-    window.open = function(url) {
-        const fullUrl = url + "webhp?igu=1";
-        document.getElementById('popupFrame').src = fullUrl;
-        openApp('popupViewer');
+        document.getElementById('webViewFrame').src = input;
     }
 
     function toggleStartMenu() {
@@ -343,6 +335,7 @@
     function displayApps(apps) {
         const appsListBody = document.getElementById('appsListBody');
         appsListBody.innerHTML = '';
+
         apps.forEach(app => {
             const appButton = document.createElement('button');
             appButton.textContent = app.name;
@@ -353,6 +346,7 @@
             };
             appsListBody.appendChild(appButton);
         });
+
         openApp('appsList');
     }
 
@@ -366,7 +360,7 @@
     }
 
     setInterval(updateClock, 1000);
-    updateClock(); // Initial call to display the clock immediately
+    updateClock();
 </script>
 
 </body>
